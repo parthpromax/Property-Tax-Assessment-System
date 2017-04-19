@@ -1,0 +1,1026 @@
+<style>
+
+.axis {
+  font-weight:  10px;
+   font-family: 'Source Sans Pro', sans-serif;
+}
+
+.axis-title {
+  text-anchor: end;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  /*stroke-width="6";*/
+  /*stroke-linecap="round";*/
+  /*stroke-dasharray="5,5";*/
+  /*stroke: #000;*/
+  shape-rendering: inherit;
+}
+
+.axis--x path {
+  display: none;
+}
+
+.axis--y .tick:not(.tick--one) line {
+  stroke-opacity: .15;
+
+}
+
+.line {
+  fill: none;
+  stroke: blue;
+  /*stroke: red;*/
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+    /*stroke: red;*/
+  /*stroke-width="6";*/
+  /*stroke-linecap="round";*/
+  /*stroke-dasharray="15,15";*/
+  /*stroke: #000;*/
+  /*shape-rendering: inherit;*/
+
+}
+
+</style>
+
+<style>
+#page {
+    margin-left: 0px;
+}
+
+#maincontent {
+    float: left;
+    width: 100%;
+    /*background-color: red;*/
+    height:100%;
+}
+#menuleftcontent{
+    float: left;
+    width: 350px;
+    margin-left: -350px;
+    background-color: #CCCCCC;
+    height: 100%;
+}
+#clearingdiv {
+    clear: both;
+}
+
+div.tooltip {   
+    position: absolute;         
+    text-align: center;         
+    *//*width: 100px;                    
+    /*height: 100px;                   */
+    padding: 2px;               
+    font: 12px sans-serif;      
+    background: lightsteelblue; 
+    border: 0px;        
+    /*border-radius: 8px;         */
+    border-radius: 4px;         
+    pointer-events: none;     
+
+ 
+
+
+}
+
+.dropdown {
+    /*position: relative;*/
+    /*display: inline-block;*/
+}
+
+.dropdown-content {
+    /*display: none;*/
+    /*position: absolute;*/
+    background-color: #CCCCCC;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    /*min-width: 160px;*/
+    /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
+    /*padding: 12px 16px;*/
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    /*display: block;*/
+}
+
+
+</style><div id="page">
+    <div id="maincontent">
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>PTAS</title>
+
+      <!-- JQuery -->
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="my.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Concert+One" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+
+
+
+      <!-- Bootstrap Slider -->
+     <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/bootstrap-slider.js"></script>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/css/bootstrap-slider.min.css"> -->
+
+
+      <!-- D3 Resources -->
+      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+      <script src="http://d3js.org/queue.v1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+    <!-- Leaflet resources -->
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+
+
+
+      <!-- Additional style elements for displaying the legend -->
+    <style>
+      .legend {
+          text-align: left;
+          line-height: 18px;
+          color: #000000;
+      }
+
+      .info {
+          padding: 8px 8px;
+          background: white;
+          background: rgba(255,255,255,1);
+          box-shadow: 0 0 15px rgba(0,0,0,0.2);
+          border-radius: 5px;
+      }
+
+      .info h4 {
+          margin: 0 0 5px;
+          color: #777;
+      }
+
+      .legend i {
+          width: 18px;
+          height: 18px;
+          float: left;
+          margin-right: 8px;
+          opacity: 1;
+
+      .d3-tip {
+          line-height: 1;
+         font-weight: bold;
+            padding: 12px;
+     background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+        border-radius: 2px;
+}
+      }
+    </style>
+  </head>
+  <body style="font-family: 'Source Sans Pro', sans-serif;">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html" style="margin-left:0px;">Property Tax Assessment System</a>
+          <a class="navbar-brand" href="paidornot.html" style="margin-left:750px;">Paid or not?</a>
+          <a class="navbar-brand" href="phasewise.html" style="margin-left:20px;">Phasewise</a>
+		  
+        </div>
+
+      </div>
+    </nav>
+
+    
+        <!-- To to make a more intuitive layer selection, add a year slider -->
+        <!-- <div class="row" style="padding: 10px 0px 15px  0px">
+            <div class="col-md-9">
+                <div id="jahresSlider">
+                    <input id="jahrslider" type="text" value="2012" style="width:100%;" data-slider-min="2012" data-slider-max="2010" data-slider-step="10" data-slider-value="2012"/>
+                </div>
+            </div>
+<!            <div class="col-md-3">
+                <span id="jahrsliderCurrentSliderValLabel">Prognosejahr: <span id="jahrsliderVal">2012</span></span>
+            </div> -->
+        
+        <!-- End of year slider -->
+        <!-- Add Map -->
+        <div class="row">
+            <div class="col-md-9">
+                <div id="densityMap" style="height:570px;"></div>
+            </div>
+        </div>
+    </div><!-- /.container -->
+
+    <script type="text/javascript">
+
+        // Initialisiert den Bootstrap Slider:
+        // $("#jahrslider").slider();
+	url="http://localhost:8888/";
+    for(i=2012; ; i++)
+            {
+	var http = new XMLHttpRequest();
+    http.open('HEAD', url.concat(i.toString().concat(".json")), false);
+    http.send();
+    if(http.status==404)
+	break;
+	}
+	function getaa()
+	{
+	return i;
+	}
+	
+	
+	window.onload = function () {
+var i=getaa();
+    var select = document.getElementById("dropdown");
+	select.text="";
+    for(var j = i-1; j>=2012; --j) {
+        var option = document.createElement('option');
+        option.text = option.value = j;
+        select.add(option, 0);
+    }
+};
+
+
+	//from 2012 to (i-1) json are available.
+	
+        // Load the JSON file(s)
+		var q=queue();
+		
+		for (var j = 2012; j < i; ++j) {
+  q.defer(d3.json,j.toString().concat(".json"));
+}
+	
+
+            //.defer(d3.json, "2012.json") // Load density2012.json
+            //.defer(d3.json, "1991.json") // Load density2000.json
+            //.defer(d3.json, "2010.json") // Load density2010.json
+            q.awaitAll(loadGeom); // When the CSV is fully loaded, call the function loadGeom
+
+        // Function loadGeom. This function is executed as soon as all the files in queue() are loaded
+        function loadGeom(error,geojsonfiles){
+
+            // Get the original value of the slider (the year which is set on page load)
+                       // original text
+
+         //   console.log(d1991);
+            sliderVal = $("#dropdown :selected").text();
+            console.log(sliderVal)
+            var i=getaa();
+
+
+            //sliderVal = 2012;
+
+            // Store the data for the year in sliderVal in the variable densityDataDSP. This could also be done with a
+            // SWITCH- or an IF-Statement, but using an array has proven to be the fastest.
+            
+			
+/*
+var densityData = {}; 
+densityData["2012"] = geojsonfiles[0];
+densityData["1991"] = geojsonfiles[1];
+
+*/
+ var densityData = {}; 
+  for (var j = 2012; j <i; ++j) {
+      densityData[j.toString()] = geojsonfiles[j-2012];
+  //console.log(j-2012);
+  }			
+			
+
+            var densityDataDSP = densityData[sliderVal];
+            	// console.log(sliderVal);
+            // Define a basemap and min/max Zoom
+/*            var basemap = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.Created as CS671 PROJECT, IIT Bombay <a href="http://www.iitb.ac.in">IIT-B</a>',
+                maxZoom: 18,
+                minZoom: 4
+            });*/
+
+            var basemap = L.tileLayer('https://{s}.tiles.mapbox.com/v4/{mapId}/{z}/{x}/{y}.png?access_token={token}', {attribution: 'Map tiles by <a href="http://mapbox.com">Mapbox</a>.Created as CS671 PROJECT, IIT Bombay <a href="http://www.iitb.ac.in">IIT-B</a>',
+                maxZoom: 16,
+                minZoom: 4,
+        
+        subdomains: ['a','b','c','d'],
+        mapId: 'mapbox.satellite',
+        token: 'pk.eyJ1IjoiZGVlcGFuayIsImEiOiJjajEwbjc0eHgwMDQyMndrMzVpbnoya296In0.nnGJQ5iIgeIk8l5vgadH0A'
+        });
+
+            
+
+
+            // Define map container. This puts the map in the <div> with the ID= 'densityMap'
+            // Hide Zoom Controles and fit initial map to the boundaries of the geometry
+            // stored in density2012.json.
+            
+var map = L.map('densityMap', {zoomControl: true, fadeAnimation: true,
+    zoomAnimation: true}).fitBounds(L.geoJson(densityDataDSP).getBounds());
+map.setZoom(14);
+
+console.log(map)
+
+
+
+// var map = L.map('densityMap',  {center: [37.8, -96.9], zoom: 4});
+// .fitBounds(L.geoJson(densityDataDSP).getBounds());
+//             console.log(L.zoom);
+            // Add the base map to the map
+            basemap.addTo(map);
+
+            // Now we will go into the mapping part of D3. First we have to create a new SVG element
+            // in which we will store our geometrys. This empty SVG element is added to the leaflet
+            // overlayPane:
+            svg = d3.select(map.getPanes().overlayPane).append("svg");
+
+            // With our SVG element set up, it is good practise to organise different SVG element, into
+            // Groups. Here we create a group "g" with the class "leaflet-zoom-hide"
+            g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+
+            // Now we come to na essential point when working with D3 generated SVGs on a leaflet map. Leaflet and
+            // D3 use different projections to display geometries. So we have to tell D3 to use the leaflet
+            // projection function "projectPoint".
+            transform = d3.geo.transform({point: projectPoint});
+
+            // Now a SVG path is created using the leaflet projection, which is stored in the variable "transform"
+            path = d3.geo.path().projection(transform);
+
+            // Use Leaflet to implement a D3 geometric transformation. This is the function that
+            // transforms D3 svg output to the correct leaflet projection
+            function projectPoint(x, y) {
+                var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+                this.stream.point(point.x, point.y);
+            }
+
+
+            map.on('click',myclick);
+
+////trying to create hover effect
+
+
+
+var div = d3.select("body").append("div")   
+    .attr("class", "tooltip")               
+    .style("opacity", 0);
+    
+            // Now lets load the density map data of the year which is selected in the slider
+            densityMap = g.append("g")                    // Append group (g) to SVG element
+                    .attr("class","densityMap")          // give it a class for styling and access later
+                    .selectAll("path")                   // select all paths of specific group (g)
+                    .data(densityDataDSP.features)       // bind data to these
+                    .enter().append("path")              // prepare data to be appended to paths
+                    .attr("id", "WARD_NAME")                // give them a id and class for styling and access later
+                    .attr("class", function(d) {
+                        return "_"+d.properties.Plot_No;
+                    })
+                    .attr("density",function(d){
+                        return "_"+d.properties.Plot_No;
+                    })
+                    .style("opacity", 0.8)// set initial opacity to 0.8
+                    .style("stroke","black")
+                    .style("fill", function(d){
+                        return getColour(d.properties.Rent_as_re);
+                    })
+                    
+                // As we are using D3 svgs, it is very easy to manipulate the polygons, depending on
+                // user interaction
+                // Here we are defining what happens, when a users cursor passes over a SVG element
+
+                    .on("mouseover", function(d) {      
+            div.transition()        
+                .duration(200)      
+                .style("opacity", .9);      
+               div .html("<strong style=\"font-size:14px;font-family: 'Source Sans Pro', sans-serif;\"> PID:   "+d.properties.PID+"<br>Total Tax:   " + (d.properties.Rent_as_re +d.properties.Rent_as_co + d.properties.Add_dev_ta +d.properties.Base_tax) +"</strong>") 
+   
+                // .style("width", nameLength(d.properties.lu)+6)   
+                // .style("width", d.properties.lu+60)   
+                
+
+                .style("left", (d3.event.pageX - 60) + "px")     
+                .style("top", (d3.event.pageY - 75) + "px");    
+            
+              
+                // .style("left", 750 + "px")     
+                // .style("top", 50 + "px");
+
+                         $('#pid'). text(d.properties.PID);
+                         $('#ba').text(d.properties.BuiltArea);
+                         $('#lu').text(d.properties.lu);
+                         $('#fargiven').text(d.properties.FAR_Given);
+                         $('#rac').text(d.properties.Rent_as_co);
+                         $('#rar').text(d.properties.Rent_as_re);
+                         $('#adt').text(d.properties.Add_dev_ta);
+                         // $('#bt').text(d.properties.Base_tax);
+                         // $('#tt').text(d.properties.Rent_as_co+d.properties.Rent_as_re+d.properties.Add_dev_ta+d.properties.Base_tax);
+    
+                             
+
+
+
+
+
+d3.select(this).transition().duration(0).style("opacity", 0.2);
+
+})                  
+        .on("mouseout", function(d) {       
+            
+
+d3.select(this).transition().duration(0).style("opacity", 0.8);
+
+div.transition()        
+                .duration(500)      
+                .style("opacity", 0);   
+        })
+        
+        .on("click", clicked);
+        
+
+        var width = 960,
+    height = 500,
+    centered;
+
+        function clicked(d) {
+  
+
+  var x, y, k;
+console.log("fdssf"+d3.mouse(this))
+x=d3.mouse(this)[0];
+y=d3.mouse(this)[1];
+  // Compute centroid of the selected path
+//   if (d && centered !== d) {
+    
+//     var centroid = path.centroid(d);
+//     x = centroid[0];
+//     y = centroid[1];
+//     k = 2;
+//     centered = d;
+//   } else {
+//     x = width / 2;
+//     y = height / 2;
+//     k = 1;
+//     centered = null;
+
+// }
+  $("#piec").text("");
+    drawmyplot(d.properties.PID,densityData);
+
+    densityMap.selectAll('path')
+    .style('fill', function(d){return centered && d===centered ? '#D5708B' : fillFn(d);});
+
+  // Zoom
+ 
+  g.transition()
+    .duration(750)
+    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
+
+
+
+var pt= d.properties.Rent_as_re + d.properties.Rent_as_co + d.properties.Add_dev_ta + d.properties.Base_tax ;
+var rar= d.properties.Rent_as_re;
+var rac=  d.properties.Rent_as_co ;
+var adt= d.properties.Add_dev_ta  ;
+var bt= d.properties.Base_tax ;
+var data= [d.properties.Rent_as_re ,d.properties.Rent_as_co , d.properties.Add_dev_ta ,d.properties.Base_tax] ;
+
+console.log(data);
+var width = 200,
+    height = 200;
+
+var outerRadius = height / 2 - 20,
+    innerRadius = outerRadius / 3,
+    cornerRadius = 10;
+
+var pie = d3.layout.pie()
+    .padAngle(.02);
+
+var arc = d3.svg.arc()
+    .padRadius(outerRadius)
+    .innerRadius(innerRadius);
+$("#piecc").text("");
+var svg = d3.select("#piecc").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+	.append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+// var color = d3.scaleOrdinal(["#98abc5", "#a05d56", "#d0743c", "#ff8c00"]);
+var color = d3.scale.category10(); 
+svg.selectAll("path")
+    .data(pie(data))
+  .enter().append("path")
+    .each(function(d) { d.outerRadius = outerRadius - 20; })
+    .attr("d", arc)
+    // .attr("fill", function(d) { return color(d.data.age); });
+    .attr("fill", function(d, i) { return color(i); } )
+    .on("mouseover", function(d){
+    	// arcTween(outerRadius, 0);
+
+
+var div = d3.select("#piecc").append("div")   
+    .attr("class", "tooltip")               
+    .style("opacity", 0);
+
+      
+      div.transition()        
+                .duration(200)      
+                .style("opacity", .9);      
+            // div.html("<strong>"+parseFloat(((d.data/pt) * 100) ).toFixed(2)+"% </strong>")
+            var ans= (d.data == rar)?"Rent As Residential":
+            (d.data == rac)?"Rent As Comercial":
+            (d.data == adt)?"Additional Development Tax":
+            (d.data == bt)?"Base Tax":"";
+             div.html("<strong style=\"font-size:14px;font-family: 'Source Sans Pro', sans-serif;\">"+ans+"<br>"+parseFloat(((d.data/pt) * 100) ).toFixed(2)+"% </strong>")
+
+                // .style("width", nameLength(d.properties.lu)+6)   
+                // .style("width", d.properties.lu+60)   
+                
+
+                .style("left", (d3.event.pageX - 40) + "px")     
+                .style("top", (d3.event.pageY - 20) + "px");    
+            
+              
+                // .style("left", 750 + "px")     
+                // .style("top", 50 + "px");
+
+
+
+
+  	
+    })
+    .on("mouseout", function(){$("div.tooltip").text("");
+    	// arcTween(outerRadius - 20, 150)
+    });
+
+// function arcTween(outerRadius, delay) {
+//   return function() {
+//     d3.select(this).transition().delay(delay).attrTween("d", function(d) {
+//       var i = d3.interpolate(d.outerRadius, outerRadius);
+//       return function(t) { d.outerRadius = i(t); return arc(d); };
+//     });
+//   };
+// }
+
+
+
+
+
+
+
+}
+
+
+function drawmyplot(pid,densityData)
+{
+var my=[]
+for(var i=2012;i<getaa();i++ ){
+
+  var temp=densityData[i].features.filter(function(d) {if(d.properties.PID==pid) return d;})
+// console.log(temp[0]);
+my.push(temp[0].properties);
+}
+console.log(my);
+
+
+
+// my=[1 2 3]
+// 1/2/3 -> each contain geo and Property;
+// data contain 150 samples each with date and close value;
+
+var margin = {top: 20, right: 20, bottom: 70, left: 55};
+    width = 300 - margin.left - margin.right,
+    height = 220 - margin.top - margin.bottom;
+
+// var formatPercent = d3.format("+.0%"),
+//     formatChange = function(x) { return formatPercent(x - 1); },
+//     parseDate = d3.time.format("%d-%b-%y").parse;
+
+
+
+var x = d3.time.scale().range([0, width]);
+var y = d3.scale.linear().range([height, 0]);
+
+// Define the axes
+var xAxis = d3.svg.axis().scale(x)
+    .orient("bottom").ticks(50)
+    .tickFormat(d3.format('.f'));
+
+var yAxis = d3.svg.axis().scale(y)
+    .orient("left").ticks(5);
+
+// Define the line
+var valueline = d3.svg.line()
+    .x(function(d) { return x(d.year); })
+    .y(function(d) { return y(d.tax); });
+    
+// Adds the svg canvas
+var svg = d3.select("#piec")
+    .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+   
+// var parseDate = d3.time.format("%Y").parse;
+
+    my.forEach(function(d,i) {
+    console.log(d);
+    d.tax = (d.Rent_as_re+d.Rent_as_co+d.Add_dev_ta+d.Base_tax)/1000;
+    d.year = i+2012;
+    console.log(d.year);
+  });
+    // svg.append("g")
+    //   .append("text")
+    // .attr("class", "axis-title")
+    // .attr("transform", "rotate(-90)")
+    // .attr("y", 6)
+    // .attr("dy", ".70em")
+    // // .attr("dy", "-.55em")
+    // .text("Change in Tax");
+
+
+    // Scale the range of the data
+    x.domain(d3.extent(my, function(d) { return d.year; }));
+    y.domain([0, d3.max(my, function(d) { return d.tax; })]);
+
+    // Add the valueline path.
+    svg.append("path")
+        .attr("class", "line")
+        .attr("d", valueline(my));
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis xaxis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+    // .attr("dy", ".35em")
+        .selectAll("text")
+    .attr("y", 0)
+    .attr("x", 9)
+    .attr("dy", ".35em")
+    .attr("transform", "rotate(90)")
+    .style("text-anchor", "start");
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+        svg.selectAll(".xaxis text")  // select all the text elements for the xaxis
+          .attr("transform", function(d) {
+             return "translate(" + this.getBBox().height*-1 + "," + this.getBBox().height*+2 + ")rotate(-45)";
+         });
+
+
+svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ -35 +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+            .text("Total Tax(*1000)");
+
+svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ (width/2) +","+175+")")  // centre below axis
+            .text("Year");
+
+
+
+// -----------------------------------
+
+
+
+// var x = d3.time.scale()
+//     .range([0, width]);
+
+// var y = d3.scale.log()
+//     .range([height, 0]);
+
+// var xAxis = d3.svg.axis()
+//     .scale(x)
+//     .orient("bottom")
+//     // .tickFormat(d3.time.format("%Y"));
+
+// var yAxis = d3.svg.axis()
+//     .scale(y)
+//     .orient("left")
+//     .tickSize(-width, 0);
+    
+//     // .tickFormat(formatChange);
+
+// var line = d3.svg.line()
+//     .x(function(d) { return x(d.year); })
+//     .y(function(d) { return y(d.tax/1000); });
+
+// var svg = d3.select("#piec").append("svg")
+//     .attr("width", width + margin.left + margin.right)
+//     .attr("height", height + margin.top + margin.bottom)
+//   .append("g")
+//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// var gX = svg.append("g")
+//     .attr("class", "axis axis--x")
+//     .attr("transform", "translate(0," + height + ")");
+
+// var gY = svg.append("g")
+//     // .attr("class", "axis axis--y");
+
+// gY.append("text")
+//     .attr("class", "axis-title")
+//     .attr("transform", "rotate(-90)")
+//     .attr("y", 6)
+//     // .attr("dy", ".71em")
+//     .attr("dy", "-.55em")
+//     .text("Change in Price");
+
+
+//   // Compute price relative to base value (hypothetical purchase price).
+//   // var baseValue = +data[0].close;
+//   console.log(my);
+//   my.forEach(function(d,i) {
+//     console.log(d);
+//     d.tax = d.Rent_as_re+d.Rent_as_co+d.Add_dev_ta+d.Base_tax;
+//     d.year = i+2012;
+//   });
+
+//   x.domain(d3.extent(my, function(d) { return d.year; }));
+//   y.domain(d3.extent(my, function(d) { return d.tax/1000; }));
+
+// // x.domain(d3.extent(my, function(d) { return d.year; }));
+// //     y.domain([0, d3.max(my, function(d) { return d.tax; })]);
+
+
+//   // Use a second linear scale for ticks.
+//   yAxis.tickValues(d3.scale.linear()
+//       .domain(y.domain())
+//       .ticks(5));
+
+//   gX.call(xAxis);
+
+//   gY.call(yAxis)
+//     .selectAll(".tick")
+//       .classed("tick--one", function(d) { return d; });
+
+//   svg.append("path")
+//       // .datum(my)
+//       .attr("class", "line")
+//       .attr("d", line(my));
+
+
+// --------------------------------
+
+
+}
+
+
+
+function myclick(d){
+
+var coordinates = d.latlng; 
+
+
+console.log(coordinates.lat,coordinates.lng)   
+map.setView(L.latLng(coordinates.lat,coordinates.lng), map.getZoom() + 1, {
+    pan: {
+        animate: true,
+        duration: 1.5
+    },
+    zoom: {
+        animate: true
+    }
+});
+
+
+
+
+// map.fitBounds(path.bounds(d));
+
+
+
+// map = L.map('densityMap', {zoomControl: true}).fitBounds(path.bounds(d));
+
+
+
+
+
+// // var map = L.map('densityMap',  {center: [37.8, -96.9], zoom: 4});
+// // .fitBounds(L.geoJson(densityDataDSP).getBounds());
+// //             console.log(L.zoom);
+//             // Add the base map to the map
+//             basemap.addTo(map);
+
+//             // Now we will go into the mapping part of D3. First we have to create a new SVG element
+//             // in which we will store our geometrys. This empty SVG element is added to the leaflet
+//             // overlayPane:
+//             svg = d3.select(map.getPanes().overlayPane).append("svg");
+
+//             // With our SVG element set up, it is good practise to organise different SVG element, into
+//             // Groups. Here we create a group "g" with the class "leaflet-zoom-hide"
+//             g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+
+//             // Now we come to na essential point when working with D3 generated SVGs on a leaflet map. Leaflet and
+//             // D3 use different projections to display geometries. So we have to tell D3 to use the leaflet
+//             // projection function "projectPoint".
+//             transform = d3.geo.transform({point: projectPoint});
+
+//             // Now a SVG path is created using the leaflet projection, which is stored in the variable "transform"
+//             path = d3.geo.path().projection(transform);
+
+
+
+
+}
+
+            // Function to get the colour of the polygon.
+            // This function basically takes the attribute value, stores the attribute value in the variable d,
+            // compares the variable d (attribute value) to various numbers (300, 250, 200 ...)  and then takes
+            // the color, where the condition is true.
+            // For example: If we have an attribute value of '220', the function starts at the top and
+            // checks if 220 is bigger than 300. Thats false so the function goes to the next value. It now checks
+            // is 220 bigger than 250? Thats also false so it goes to the next value again. Is 220 bigger than
+            // 200? This is true so the function takes the color defined where d > 200.
+
+          function getColour(d){
+        // console.log(d);
+                return  d > 30000 ? '#008000':
+                              '#ff0000';
+            }
+
+
+
+            // console.log(densityDataDSP.features[0].properties.density)
+
+
+            // Add a legend
+            // Create the legend variable and set its position
+            var densityLegend = L.control({position: 'topleft'});
+            // Define what happens when the legend gets loaded
+
+            // Create a div to store our legend in
+            densityLegend.onAdd = function (map) {var div = L.DomUtil.create('div', 'info legend'); return div;}
+            // Create an array with the different intervals to be
+            // displayed in the legend
+
+            // Add empty legend to map
+            densityLegend.addTo(map);
+
+        var luss = ["Paid","Not Paid"];
+            // Create an array called 'labels' and set the first 2 lines
+            var labels = ['<strong>Paid or not</strong>'];
+            // For each element in the array 'grades' create a new line in the
+            // legend.
+           
+                labels.push('<i style="background:#008000"></i> ' + luss[0]);
+                labels.push('<i style="background:#ff0000"></i> ' + luss[1]);
+
+            // Join all the labels in the labels-array and add a <br> after each element
+            var legendText = labels.join('<br>');
+
+            // Use D3.js to fill up the legend DIV with our legend items
+            d3.select(".legend.leaflet-control") // select the div with class '.legend.leaflet-control'
+              .html(legendText); // Add the html stored in the legendText variable.
+
+
+            // now we have to define what happens, when someone changes the slider value
+            $("#dropdown").on("change", function(slideEvt) {
+
+				$("#piec").text("");
+                // Get the new value of the slider and update the text next to the slider
+                sliderVal=$('#dropdown option:selected').text();
+
+                console.log(sliderVal)
+	// $("#dropdown :selected").text(slideEvt.value.newValue);
+                // Put the new slider value in the variable sliderVal
+                
+
+                // Store the new data for the year in sliderVal in the variable densityDataDSP. This could
+                // also be done with a SWITCH- or an IF-Statement, but using an array has proven to be the fastest.
+             
+                var densityDataDSP = densityData[sliderVal];
+
+
+                // Now lets update the SVG-Path styles and attributes to fit the new values
+                d3.selectAll("path")                         // select all paths of specific group (g)
+                        .data(densityDataDSP.features)       // bind data to these
+                        .attr("density",function(d){
+                        return "_"+d.properties.Plot_No;
+                    	})
+                    	.style("fill", function(d){
+                        return getColour(d.properties.Rent_as_re);
+                    	})
+
+
+
+
+            });
+
+            // Now because D3 is not generic leaflet, we have to defien what should happen to the SVG when
+            // a user scrolls or zooms. So on "viewreset" the function "reset" is called
+            map.on("viewreset", reset);
+
+            // On first load, the user will not have paned or zoomed, but the SVG still needs to be put in the
+            // right place, so the function reset is called.
+            reset();
+
+            // This function places the SVG at the right position, even after zoom and/or pan
+            function reset() {
+
+                // Get the bounding Box
+                boundsKreis = path.bounds(densityDataDSP);
+                   var topLeft = boundsKreis[0],
+                        bottomRight = boundsKreis[1];
+                        console.log(bottomRight[0] + topLeft[0] +  bottomRight[1] + topLeft[1])
+                // save top left and bottom right corner coordinates in variables
+             
+
+                // reposition and rescale SVG element
+                svg.attr("width", bottomRight[0] - topLeft[0])
+                        .attr("height", bottomRight[1] - topLeft[1])
+                        .style("left", topLeft[0] + "px")
+                        .style("top", topLeft[1] + "px");
+
+                // reposition all geometries in SVG
+                svg.selectAll("g.densityMap").attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+                densityMap.attr("d", path);
+               
+            }
+
+
+
+
+        }
+    </script>
+  </body>
+</html>
+
+
+    </div>
+    <div id="menuleftcontent">
+
+ 
+<p style="font-weight: bold;margin-left:20px;margin-top:20px;font-size:18px;" >
+Select Year&nbsp;&nbsp;&nbsp; <select id="dropdown" style="">
+</select>
+  </table>
+</p>
+
+
+<br><center><span id="labu" style="font-weight: bold;margin-left:20px;margin-top:20px;font-size:18px;" >
+
+Tax collected over the year (2012-2016)
+</span></center>
+
+<div id="piec" style="margin-left: 20px;">
+
+
+</div>
+<!-- <script type="text/javascript">
+  var x = document.getElementById("piec");
+  if( x.childNodes.length === 0) {
+    document.getElementById("labu").setAttribute("type", "hidden");}
+</script>
+ -->
+
+    </div>
+    <div id="clearingdiv"></div>
+</div>
+
+
+<script>
+/*
+var i=getaa();
+
+var x = document.getElementById("dropdown");
+x.value="";
+var option = document.createElement("option");
+option.text = "1992";
+x.add(option);
+
+*/
+
+
+
+</script>
