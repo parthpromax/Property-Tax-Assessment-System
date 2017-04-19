@@ -8,7 +8,7 @@ How to start server.
 
 Here 8888 is port number. you can give any number.
 
-Once server is started, now open browser and write localhost:8888/
+Once server is started, now open browser and write "localhost:8888/"
 Done.
 
 --> In this project we are using dummy GIS data of Vapi city.
